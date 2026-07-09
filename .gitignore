@@ -1,0 +1,10 @@
+# Dependency directories
+/node_modules
+
+# Environment variables
+.env
+
+# Config files
+/config/db.js
+/config/socket.js
+/config/upload.js
