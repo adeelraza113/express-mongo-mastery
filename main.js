@@ -6,6 +6,8 @@ import http from 'http';
 import connectDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
 import { initSocket } from './config/socket.js';
+import { errorHandler } from './config/errorHandler.js';
+
 
 
 dotenv.config();
@@ -23,8 +25,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/products', productRoutes);
+app.use(errorHandler);
 
 app.use('/public/uploads', express.static(path.join(__dirname, 'public/uploads')));
+
 
 
 app.get('/api/health', (req, res) => {

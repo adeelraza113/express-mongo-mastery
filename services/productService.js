@@ -55,6 +55,27 @@ class ProductService {
     async deleteProduct(id) {
         return await Product.findByIdAndDelete(id);
     }
+
+    async getProductStats() {
+        return await Product.aggregate([
+            {
+                $match: { price: { $gte: 0 } }
+            },
+            {
+                $group: {
+                    _id: { $toUpper: '$category' }, 
+                    totalProducts: { $sum: 1 }, 
+                    avgPrice: { $avg: '$price' }, 
+                    minPrice: { $min: '$price' }, 
+                    maxPrice: { $max: '$price' }, 
+                    totalStockValue: { $sum: { $multiply: ['$price', '$stock'] } } 
+                }
+            },
+            {
+                $sort: { avgPrice: -1 }
+            }
+        ]);
+    }
 }
 
 export default new ProductService();

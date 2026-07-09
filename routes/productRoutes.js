@@ -4,7 +4,7 @@ import upload from '../config/upload.js';
 
 const router = express.Router();
 
-
+router.route('/stats').get(productController.getStats);
 router.route('/')
     .post(upload.single('image'), productController.create) 
     .get(productController.getAll);
@@ -16,5 +16,7 @@ router.route('/:id')
 
 router.route('/:id/reviews')
     .post(productController.createProductReview);
+
+
 
 export default router;

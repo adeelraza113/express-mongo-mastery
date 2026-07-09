@@ -91,6 +91,19 @@ class ProductController {
             return res.status(500).json({ status: "error", message: error.message });
         }
     }
+
+    async getStats(req, res, next) {
+        try {
+            const stats = await productService.getProductStats();
+            return res.status(200).json({
+                status: "success",
+                data: stats
+            });
+        } catch (error) {
+            next(error); 
+        }
+    }
+
 }
 
 export default new ProductController();
