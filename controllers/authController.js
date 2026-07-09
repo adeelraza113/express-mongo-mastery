@@ -1,14 +1,21 @@
 import authService from '../services/authService.js';
 
 class AuthController {
-    async signup(req, res, next) {
-        try {
-            const result = await authService.register(req.body);
-            return res.status(201).json({ status: "success", ...result });
-        } catch (error) {
-            next(error);
-        }
+   async signup(req, res, next) {
+    try {
+        console.log("Signup request body:", req.body);  
+        
+        const result = await authService.register(req.body);
+        
+        return res.status(201).json({ 
+            status: "success", 
+            ...result 
+        });
+    } catch (error) {
+        console.error("Signup Error:", error);  
+        next(error);
     }
+}
 
     async login(req, res, next) {
         try {

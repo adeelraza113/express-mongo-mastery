@@ -1,21 +1,22 @@
 import express from 'express';
 import productController from '../controllers/productController.js';
 import upload from '../config/upload.js';
+import { protect } from '../config/authMiddleware.js';
 
 const router = express.Router();
 
 router.route('/stats').get(productController.getStats);
 router.route('/')
-    .post(upload.single('image'), productController.create) 
+    .post(protect,upload.single('image'), productController.create) 
     .get(productController.getAll);
 
 router.route('/:id')
     .get(productController.getById)
-    .put(productController.update)
-    .delete(productController.delete);
+    .put(protect, productController.update)
+    .delete(protect, productController.delete);
 
 router.route('/:id/reviews')
-    .post(productController.createProductReview);
+    .post(protect, productController.createProductReview);
 
 
 

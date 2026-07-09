@@ -103,7 +103,7 @@ class ProductController {
             next(error); 
         }
     }
-
+    
 }
 
 export default new ProductController();

@@ -10,19 +10,27 @@ const signToken = (id) => {
 };
 
 class AuthService {
-    async register(userData) {
-        const existingUser = await User.findOne({ email: userData.email });
+   async register(userData) {
+    try {
+        const { confirm_password, ...userToSave } = userData;
+
+        const existingUser = await User.findOne({ email: userToSave.email });
         if (existingUser) {
             throw new AppError('Email already registered!', 400);
         }
-        
-        const newUser = await User.create(userData);
+
+        const newUser = await User.create(userToSave);
+
         const token = signToken(newUser._id);
         newUser.password = undefined;
-        return { user: newUser, token };
-    }
 
-  
+        return { message: 'User registered successfully', token };
+    } catch (error) {
+        console.error("Register service error:", error.message || error);
+        throw error;
+    }
+}
+
     async login(email, password) {
         if (!email || !password) {
             throw new AppError('Please provide email and password!', 400);
@@ -36,7 +44,7 @@ class AuthService {
 
         const token = signToken(user._id);
         user.password = undefined;
-        return { user, token };
+        return { message: 'Login successful', token };
     }
 }
 
