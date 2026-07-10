@@ -3,6 +3,10 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import http from 'http';
+import cors from 'cors';
+import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
+import rateLimit from 'express-rate-limit';
 import connectDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
 import { initSocket } from './config/socket.js';
@@ -18,12 +22,23 @@ const app = express();
 const server = http.createServer(app);
 initSocket(server);
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
+app.use(helmet());
+app.use(cors({ origin: '*' })); 
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, 
+    max: 100,
+    message: { status: 'fail', message: 'Too many requests from this IP, please try again after 15 minutes.' }
+});
+app.use('/api', limiter);
+app.use(mongoSanitize());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
