@@ -31,6 +31,8 @@ const productSchema = new mongoose.Schema({
     timestamps: true 
 });
 
+productSchema.index({ category: 1, price: -1 });
+productSchema.index({ name: 'text', description: 'text' });
 productSchema.virtual('imageUrl').get(function() {
     if (this.image) {
         return `${process.env.BASE_URL}${this.image}`;

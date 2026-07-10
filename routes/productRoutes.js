@@ -5,6 +5,7 @@ import { protect } from '../config/authMiddleware.js';
 
 const router = express.Router();
 
+router.route('/performance-debug').get(productController.checkPerformance);
 router.route('/stats').get(productController.getStats);
 router.route('/')
     .post(protect,upload.single('image'), productController.create) 

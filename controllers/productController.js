@@ -103,6 +103,21 @@ class ProductController {
             next(error); 
         }
     }
+
+    async checkPerformance(req, res, next) {
+    try {
+        const { category, maxPrice } = req.query;
+        const performanceReport = await productService.debugQueryPerformance(category, Number(maxPrice || 1000));
+        
+        return res.status(200).json({
+            status: "success",
+            report: performanceReport
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
     
 }
 
