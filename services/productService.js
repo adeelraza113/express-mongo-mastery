@@ -1,5 +1,8 @@
+import mongoose from 'mongoose';
 import Product from '../models/productModel.js';
 import Review from '../models/reviewModel.js';
+import { AppError } from '../config/errorHandler.js';
+
 
 class ProductService {
 
@@ -52,10 +55,19 @@ class ProductService {
         };
     }
 
-    async createReview(reviewData) {
-        const review = new Review(reviewData);
-        return await review.save();
+   async createReviewWithTransaction(reviewData) {
+    const newReview = await Review.create(reviewData);
+    
+    const product = await Product.findById(reviewData.product);
+    if (!product) {
+        throw new AppError('Product not found!', 404);
     }
+
+    product.stock = product.stock > 0 ? product.stock - 1 : 0;
+    await product.save();
+
+    return newReview;
+}
 
     async updateProduct(id, updateData) {
         return await Product.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });

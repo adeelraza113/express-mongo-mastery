@@ -1,22 +1,24 @@
-export const validateProductInput = (data) => {
-    const errors = {};
+import Joi from 'joi';
 
-    if (!data.name || data.name.trim() === "") {
-        errors.name = "Product name is required";
-    }
-    
-    if (data.price === undefined || data.price === null) {
-        errors.price = "Product price is required";
-    } else if (isNaN(data.price) || Number(data.price) < 0) {
-        errors.price = "Price must be a valid positive number";
-    }
 
-    if (!data.category || data.category.trim() === "") {
-        errors.category = "Product category is required";
-    }
+export const productCreateSchema = Joi.object({
+    name: Joi.string().trim().min(3).max(100).required().messages({
+        'string.empty': 'Product name cannot be empty',
+        'string.min': 'Product name should have at least 3 characters'
+    }),
+    price: Joi.number().positive().required().messages({
+        'number.positive': 'Price must be a positive number'
+    }),
+    description: Joi.string().trim().optional(),
+    category: Joi.string().trim().required(),
+    stock: Joi.number().integer().min(0).default(0)
+});
 
-    return {
-        errors,
-        isValid: Object.keys(errors).length === 0
-    };
-};
+
+export const userRegisterSchema = Joi.object({
+    name: Joi.string().trim().required(),
+    email: Joi.string().email().required().messages({
+        'string.email': 'Please provide a valid email address'
+    }),
+    password: Joi.string().min(6).required()
+});

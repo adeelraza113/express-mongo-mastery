@@ -45,21 +45,18 @@ class ProductController {
         }
     }
 
-    async createProductReview(req, res) {
+    async createProductReview(req, res, next) {
         try {
             const { username, rating, comment } = req.body;
             const productId = req.params.id;
-
             if (!username || !rating || !comment) {
                 return res.status(400).json({ status: "fail", message: "All review fields are required" });
             }
-
             const reviewData = { product: productId, username, rating, comment };
-            const newReview = await productService.createReview(reviewData);
-
-            return res.status(201).json({ status: "success", messaage: "Review added successfully" });
+            const newReview = await productService.createReviewWithTransaction(reviewData);
+            return res.status(201).json({ status: "success", data: newReview });
         } catch (error) {
-            return res.status(500).json({ status: "error", message: error.message });
+            next(error);
         }
     }
 
