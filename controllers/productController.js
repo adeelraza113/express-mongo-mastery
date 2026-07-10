@@ -1,14 +1,11 @@
 import productService from '../services/productService.js';
-import { validateProductInput } from '../validations/productValidation.js';
 import { getIO } from '../config/socket.js';
 
 class ProductController {
 
-    async create(req, res) {
+   async create(req, res) {
         try {
-            const { errors, isValid } = validateProductInput(req.body);
-            if (!isValid) return res.status(400).json({ status: "fail", errors });
-            const productData = { ...req.body }; 
+            const productData = { ...req.body };
             if (req.file) {
                 productData.image = `/public/uploads/${req.file.filename}`;
             }
@@ -18,12 +15,21 @@ class ProductController {
                 message: "A new product has been uploaded real-time!",
                 product: newProduct
             });
-            return res.status(201).json({ status: "success", message: "Product created successfully" });
+
+            return res.status(201).json({
+                status: "success",
+                message: "Product created successfully",
+            });
+
         } catch (error) {
-            return res.status(500).json({ status: "error", message: error.message });
+            console.error(error);
+            return res.status(500).json({
+                status: "error",
+                message: error.message
+            });
         }
     }
-   
+
     async getAll(req, res) {
         try {
             const products = await productService.getAllProducts(req.query);
@@ -60,22 +66,31 @@ class ProductController {
         }
     }
 
-    async update(req, res) {
-        try {
-            const { errors, isValid } = validateProductInput(req.body);
-            if (!isValid) {
-                return res.status(400).json({ status: "fail", errors });
-            }
 
-            const updatedProduct = await productService.updateProduct(req.params.id, req.body);
-            if (!updatedProduct) {
-                return res.status(404).json({ status: "fail", message: "Product not found to update" });
-            }
-            return res.status(200).json({ status: "success",message: "Product updated successfully" });
-        } catch (error) {
-            return res.status(500).json({ status: "error", message: error.message });
+async update(req, res) {
+    try {
+        const updatedProduct = await productService.updateProduct(req.params.id, req.body);
+
+        if (!updatedProduct) {
+            return res.status(404).json({
+                status: "fail",
+                message: "Product not found"
+            });
         }
+
+        return res.status(200).json({
+            status: "success",
+            message: "Product updated successfully",
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            status: "error",
+            message: error.message
+        });
     }
+}
 
     async delete(req, res) {
         try {
