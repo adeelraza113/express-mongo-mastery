@@ -5,8 +5,3 @@
 .env
 
 # Config files
-/config/db.js
-/config/socket.js
-/config/upload.js
-/config/errorHandler.js
-/config/authMiddleware.js
