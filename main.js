@@ -12,6 +12,7 @@ import productRoutes from './routes/productRoutes.js';
 import { initSocket } from './config/socket.js';
 import { errorHandler } from './config/errorHandler.js';
 import authRoutes from './routes/authRoutes.js';
+import chatRoutes from './routes/chatRoutes.js';
 
 
 
@@ -42,6 +43,7 @@ const __dirname = path.dirname(__filename);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/chats', chatRoutes);
 
 app.use('/public/uploads', express.static(path.join(__dirname, 'public/uploads')));
 app.use(errorHandler);
