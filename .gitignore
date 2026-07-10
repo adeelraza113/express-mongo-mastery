@@ -9,4 +9,4 @@
 /config/socket.js
 /config/upload.js
 /config/errorHandler.js
-/config/auth.js
+/config/authMiddleware.js
