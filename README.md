@@ -53,5 +53,5 @@ An enterprise-ready, high-performance RESTful API and Real-Time WebSocket engine
 ### Steps to Run
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/adeelraza113/express-mongo-mastery.git](https://github.com/adeelraza113/express-mongo-mastery.git)
+   git clone https://github.com/adeelraza113/express-mongo-mastery.git
    cd your-repo-name
